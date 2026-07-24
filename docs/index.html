@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Adam Markocki</title>
+  <meta name="description" content="Adam Markocki's desk — a 3D 1984 Macintosh you can actually use. Click around to explore." />
+  <meta property="og:title" content="Adam Markocki" />
+  <meta property="og:description" content="A 3D desk with a working 1984 Macintosh. Click around to explore." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e8e0cf'/%3E%3Crect x='14' y='12' width='36' height='28' rx='4' fill='%23222'/%3E%3Crect x='18' y='16' width='28' height='20' fill='%23cfe8ff'/%3E%3Crect x='26' y='44' width='12' height='4' rx='2' fill='%23b5ac97'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Pixelify+Sans:wght@400;600&family=VT323&display=swap" rel="stylesheet" />
+  <script type="module" crossorigin src="./assets/index-Cs-6dtTT.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-Css3JrkV.css">
+</head>
+<body>
+  <canvas id="webgl"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- Loader -->
+  <div class="loader" id="loader">
+    <div class="loader__mark">
+      <span class="s1"></span><span class="s2"></span><span class="s3"></span>
+      <span class="s4"></span><span class="s5"></span><span class="s6"></span>
+      <b>AM</b>
+    </div>
+  </div>
+
+  <!-- Corner buttons -->
+  <button class="corner-btn corner-btn--tl" id="zoom-btn" aria-label="Zoom">
+    <svg viewBox="0 0 24 24" class="ic-zoom"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><line x1="15.5" y1="15.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="7.5" y1="10.5" x2="13.5" y2="10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="10.5" y1="7.5" x2="10.5" y2="13.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <svg viewBox="0 0 24 24" class="ic-back"><line x1="20" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><polyline points="11 5 4 12 11 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="corner-btn corner-btn--tr" id="sound-btn" aria-label="Toggle sound">
+    <svg viewBox="0 0 24 24" class="ic-snd-on"><polygon points="4 9 8 9 13 4 13 20 8 15 4 15" fill="currentColor"/><path d="M16 8.5c1.4 1.9 1.4 5.1 0 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18.8 6c2.5 3.3 2.5 8.7 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <svg viewBox="0 0 24 24" class="ic-snd-off"><polygon points="4 9 8 9 13 4 13 20 8 15 4 15" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="21" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+
+  <!-- Hint -->
+  <div class="hint" id="hint">tap the macintosh</div>
+
+  <!-- Retro OS overlay (aligned to the 3D screen when zoomed) -->
+  <div id="os-root" aria-hidden="true">
+    <div id="os-scale">
+      <div id="os-inner">
+        <div id="os-boot">
+          <div class="boot-mac">
+            <div class="boot-mac__screen"><span>:^)</span></div>
+          </div>
+          <div class="boot-welcome">Welcome to AdamOS.</div>
+        </div>
+        <div id="os-menubar">
+          <span class="mb-logo">AM</span>
+          <span class="mb-item" data-menu="file">File</span>
+          <span class="mb-item" data-menu="edit">Edit</span>
+          <span class="mb-item" data-menu="special">Special</span>
+          <span class="mb-clock" id="mb-clock">12:00</span>
+        </div>
+        <div id="os-desktop"></div>
+        <div id="os-windows"></div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

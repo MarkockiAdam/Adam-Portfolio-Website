@@ -1,0 +1,77 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-publish
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: touch dist/.nojekyll
+
+      # Single-branch model: the built site lives in docs/ on main,
+      # served by GitHub Pages (Settings -> Pages -> main /docs).
+      # [skip ci] + the paths-ignore above prevent workflow loops.
+      # Pushes retry because GitHub occasionally 500s transiently.
+      - name: Commit built site to docs/
+        run: |
+          rm -rf docs
+          mv dist docs
+          git config user.name 'Adam Markocki'
+          git config user.email 'markocki.adam@gmail.com'
+          git add docs
+          if git diff --cached --quiet; then
+            echo "docs/ unchanged, nothing to commit"
+            exit 0
+          fi
+          git commit -m "Build site into docs/ [skip ci]"
+          for i in 1 2 3 4; do
+            git push && exit 0
+            echo "push failed, retrying in 10s..."
+            sleep 10
+            git pull --rebase
+          done
+          exit 1
+
+      # TEMPORARY back-compat: also publish to the legacy Pages branch until
+      # Settings -> Pages is switched to main /docs. Delete this step and the
+      # macintosh-1984 branch after switching.
+      - id: legacy
+        continue-on-error: true
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: macintosh-1984
+          force_orphan: true
+          user_name: 'Adam Markocki'
+          user_email: 'markocki.adam@gmail.com'
+      - if: steps.legacy.outcome == 'failure'
+        run: sleep 15
+      - if: steps.legacy.outcome == 'failure'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: macintosh-1984
+          force_orphan: true
+          user_name: 'Adam Markocki'
+          user_email: 'markocki.adam@gmail.com'
