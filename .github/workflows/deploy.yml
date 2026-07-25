@@ -50,28 +50,3 @@ jobs:
             git pull --rebase
           done
           exit 1
-
-      # TEMPORARY back-compat: also publish to the legacy Pages branch until
-      # Settings -> Pages is switched to main /docs. Delete this step and the
-      # macintosh-1984 branch after switching.
-      - id: legacy
-        continue-on-error: true
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
-          publish_branch: macintosh-1984
-          force_orphan: true
-          user_name: 'Adam Markocki'
-          user_email: 'markocki.adam@gmail.com'
-      - if: steps.legacy.outcome == 'failure'
-        run: sleep 15
-      - if: steps.legacy.outcome == 'failure'
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
-          publish_branch: macintosh-1984
-          force_orphan: true
-          user_name: 'Adam Markocki'
-          user_email: 'markocki.adam@gmail.com'
